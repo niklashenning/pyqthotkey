@@ -1,0 +1,39 @@
+#window {
+    background: #E9E9E9;
+    border: 1px solid #CACACA;
+    border-radius: 7px;
+}
+
+#window_bar {
+    background-color: #CBC7C7;
+    border-radius: 7px;
+}
+
+#window_title {
+    color: #333333;
+    font-size: 12px;
+}
+
+#close_button {
+    color: #333333;
+    background-color: #9C9C9C;
+    border-radius: 11px;
+}
+
+#label_1, #label_2, #label_3 {
+    font-size: 12px;
+}
+
+#hotkey_picker_1, #hotkey_picker_2, #hotkey_picker_3 {
+    background: #DFDFDF;
+    border: 1px solid gray;
+    border-radius: 4px;
+}
+
+#hotkey_picker_1:focus, #hotkey_picker_2:focus, #hotkey_picker_3:focus {
+    border: 1px solid #000;
+}
+
+#hotkey_picker_1::hover, #hotkey_picker_2::hover, #hotkey_picker_3::hover {
+    border: 1px solid #666666;
+}
