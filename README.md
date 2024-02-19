@@ -1,6 +1,8 @@
 # pyqt-hotkey-picker
 A simple and customizable hotkey picker widget for PyQt5
 
+![pyqt-hotkey-picker](https://github.com/niklashenning/pyqt-hotkey-picker/assets/58544929/4b5104ed-0848-4346-a81c-f61bdd40dde0)
+
 ## Installation
 Download the **hotkey_picker.py** file from the **src** folder and add it to your project
 
