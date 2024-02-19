@@ -85,7 +85,9 @@ class HotkeyPicker(QPushButton):
 
         # Check if entered key is cancel key
         if key == self.cancel_key:
-            self.reset()
+            self.setText(self.default_text)
+            self.selected_key_code = 0
+            self.selected_key_string = ''
         else:
             # Ignore key press if key is not in allowed_keys
             if self.filter_keys and self.allowed_keys and key not in self.allowed_keys:
