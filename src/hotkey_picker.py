@@ -150,6 +150,9 @@ class HotkeyPicker(QPushButton):
         self.selected_key_code = 0
         self.selected_key_string = ''
 
+        # Emit signal
+        self.emit_hotkey_changed_signal()
+
     def emit_hotkey_changed_signal(self):
         """Emit a signal that the selected hotkey has changed"""
 
