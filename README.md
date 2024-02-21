@@ -51,8 +51,8 @@ demo_hotkey_picker.reset()
 
 You can also use the static `key_code_to_string` method to get the name of a key:
 ```python
-key_name_1 = HotkeyPicker.key_code_to_string(Qt.Key_A)  # A
-key_name_2 = HotkeyPicker.key_code_to_string(16777268)  # F5
+key_name_1 = HotkeyPicker.key_code_to_string(Qt.Key_A)  # 'A'
+key_name_2 = HotkeyPicker.key_code_to_string(16777268)  # 'F5'
 ```
 
 More in-depth examples can be found in the **examples** folder
