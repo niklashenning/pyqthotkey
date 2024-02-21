@@ -14,9 +14,9 @@ class HotkeyPicker(QPushButton):
             key_code_map[value] = key.partition('_')[2]
 
     # Manually change name for some keys
-    key_code_map[Qt.Key_Adiaeresis] = "Ä"
-    key_code_map[Qt.Key_Odiaeresis] = "Ö"
-    key_code_map[Qt.Key_Udiaeresis] = "Ü"
+    key_code_map[Qt.Key_Adiaeresis] = 'Ä'
+    key_code_map[Qt.Key_Odiaeresis] = 'Ö'
+    key_code_map[Qt.Key_Udiaeresis] = 'Ü'
 
     def __init__(self, parent=None, default_text='None', selecting_text='..',
                  cancel_key=Qt.Key_Escape, filter_keys=False, allowed_keys=[], forbidden_keys=[]):
@@ -48,6 +48,7 @@ class HotkeyPicker(QPushButton):
         # Init variables
         self.selected_key_code = 0
         self.selected_key_string = ''
+        self.in_selection = False
 
         # Prevent the hotkey picker from focusing automatically (e.g. if it is the only widget)
         self.setFocusPolicy(Qt.ClickFocus)
@@ -60,6 +61,7 @@ class HotkeyPicker(QPushButton):
         :param event: event sent by PyQt
         """
 
+        self.in_selection = True
         self.setText(self.selecting_text)
 
     def focusOutEvent(self, event):
@@ -69,10 +71,12 @@ class HotkeyPicker(QPushButton):
         """
 
         # Focus out without a new key being selected
-        if self.selected_key_code == 0 and self.text() != self.default_text:
+        if self.selected_key_code == 0 and self.in_selection:
             self.setText(self.default_text)
-        elif self.selected_key_code != 0 and self.text() == self.selecting_text:
+            self.in_selection = False
+        elif self.selected_key_code != 0 and self.in_selection:
             self.setText(HotkeyPicker.key_code_to_string(self.selected_key_code))
+            self.in_selection = False
 
     def keyPressEvent(self, event):
         """Get key from event and set it as the hotkey
@@ -100,11 +104,12 @@ class HotkeyPicker(QPushButton):
             self.selected_key_code = key
             self.selected_key_string = key_string
 
-        # Clear widget focus
+        # Clear selection and widget focus
+        self.in_selection = False
         self.clearFocus()
 
         # Emit signal
-        self.emit_hotkey_changed_signal()
+        self.__emit_hotkey_changed_signal()
 
     def get_hotkey(self):
         """Get the currently selected hotkey
@@ -143,7 +148,7 @@ class HotkeyPicker(QPushButton):
             self.selected_key_string = key_string
             self.setText(key_string)
             # Emit signal
-            self.emit_hotkey_changed_signal()
+            self.__emit_hotkey_changed_signal()
 
     def reset(self):
         """Reset the hotkey picker to the default state with no hotkey selected"""
@@ -153,9 +158,96 @@ class HotkeyPicker(QPushButton):
         self.selected_key_string = ''
 
         # Emit signal
-        self.emit_hotkey_changed_signal()
+        self.__emit_hotkey_changed_signal()
 
-    def emit_hotkey_changed_signal(self):
+    def get_default_text(self):
+        """Get the default text"""
+
+        return self.default_text
+
+    def set_default_text(self, default_text):
+        """Set the default text
+
+        :param default_text: the new default text
+        """
+
+        self.default_text = default_text
+        if not self.in_selection and self.selected_key_code == 0:
+            self.setText(default_text)
+
+    def get_selecting_text(self):
+        """Get the selecting text"""
+
+        return self.selecting_text
+
+    def set_selecting_text(self, selecting_text):
+        """Set the selecting text
+
+        :param selecting_text: the new selecting text
+        :return:
+        """
+
+        self.selecting_text = selecting_text
+        if self.in_selection:
+            self.setText(selecting_text)
+
+    def get_cancel_key(self):
+        """Get the cancel key"""
+
+        return self.cancel_key
+
+    def set_cancel_key(self, cancel_key):
+        """Set the cancel key
+
+        :param cancel_key: the new cancel key
+        """
+
+        self.cancel_key = cancel_key
+
+    def get_filter_keys(self):
+        """Get key filtering"""
+
+        return self.filter_keys
+
+    def set_filter_keys(self, filter_keys):
+        """Set key filtering
+
+        :param filter_keys: bool if keys should be filtered
+        """
+
+        self.filter_keys = filter_keys
+
+    def get_allowed_keys(self):
+        """Get allowed keys"""
+
+        return self.allowed_keys
+
+    def set_allowed_keys(self, allowed_keys):
+        """Set allowed keys
+
+        :param allowed_keys: the new allowed keys list
+        """
+
+        if allowed_keys and self.forbidden_keys:
+            self.forbidden_keys = []
+        self.allowed_keys = allowed_keys
+
+    def get_forbidden_keys(self):
+        """Get forbidden keys"""
+
+        return self.forbidden_keys
+
+    def set_forbidden_keys(self, forbidden_keys):
+        """Set forbidden keys
+
+        :param forbidden_keys: the new forbidden keys list
+        """
+
+        if forbidden_keys and self.allowed_keys:
+            self.allowed_keys = []
+        self.forbidden_keys = forbidden_keys
+
+    def __emit_hotkey_changed_signal(self):
         """Emit a signal that the selected hotkey has changed"""
 
         self.hotkey_changed.emit(self.selected_key_code, self.selected_key_string)
