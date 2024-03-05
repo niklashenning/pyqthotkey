@@ -27,21 +27,24 @@ class Window(QMainWindow):
     def hotkey_changed(self, key, key_name):
         print([key, key_name])
 ```
-Use the `get_hotkey` method to get the key code of the selected hotkey:
+Use the `getHotkey()` method to get the key code of the selected hotkey:
+
 ```python
 # Returns int with key code if a hotkey is selected, otherwise 0
-key_code = demo_hotkey_picker.get_hotkey()  # e.g. 65 (which is the same as Qt.Key_A)
+key_code = demo_hotkey_picker.getHotkey()  # e.g. 65 (which is the same as Qt.Key_A)
 ```
 
-Use the `get_hotkey_string` method to get the name of the selected hotkey:
+Use the `getHotkeyString()` method to get the name of the selected hotkey:
+
 ```python
 # Returns string with key name if a hotkey is selected, otherwise empty string
-key_name = demo_hotkey_picker.get_hotkey_string()  # e.g. 'Shift'
+key_name = demo_hotkey_picker.getHotkeyString()  # e.g. 'Shift'
 ```
 
-Use the `set_hotkey` method to set the selected hotkey manually:
+Use the `setHotkey()` method to set the selected hotkey manually:
+
 ```python
-demo_hotkey_picker.set_hotkey(Qt.Key_A)  # could also directly pass int (e.g. 65)
+demo_hotkey_picker.setHotkey(Qt.Key_A)  # could also directly pass int (e.g. 65)
 ```
 
 Use the `reset` method to reset the hotkey picker to the default state with no selected hotkey:
@@ -49,13 +52,14 @@ Use the `reset` method to reset the hotkey picker to the default state with no s
 demo_hotkey_picker.reset()
 ```
 
-You can also use the static `key_code_to_string` method to get the name of a key:
+You can also use the static `keyCodeToString()` method to get the name of a key:
+
 ```python
-key_name_1 = HotkeyPicker.key_code_to_string(Qt.Key_A)  # 'A'
-key_name_2 = HotkeyPicker.key_code_to_string(16777268)  # 'F5'
+key_name_1 = HotkeyPicker.keyCodeToString(Qt.Key_A)  # 'A'
+key_name_2 = HotkeyPicker.keyCodeToString(16777268)  # 'F5'
 ```
 
-More in-depth examples can be found in the **examples** folder
+More in-depth examples can be found in the [examples](examples) folder
 
 ## Customization
 * **Changing the cancel key used to exit the hotkey selection:**

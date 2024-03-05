@@ -37,7 +37,7 @@ class HotkeyPicker(QPushButton):
         self.default_text = default_text
         self.selecting_text = selecting_text
         self.cancel_key = cancel_key
-        self.filter_keys = filter_keys
+        self.filtering_keys = filter_keys
         self.allowed_keys = allowed_keys
         self.forbidden_keys = forbidden_keys
 
@@ -75,7 +75,7 @@ class HotkeyPicker(QPushButton):
             self.setText(self.default_text)
             self.in_selection = False
         elif self.selected_key_code != 0 and self.in_selection:
-            self.setText(HotkeyPicker.key_code_to_string(self.selected_key_code))
+            self.setText(HotkeyPicker.keyCodeToString(self.selected_key_code))
             self.in_selection = False
 
     def keyPressEvent(self, event):
@@ -85,7 +85,7 @@ class HotkeyPicker(QPushButton):
         """
 
         key = event.key()
-        key_string = HotkeyPicker.key_code_to_string(key)
+        key_string = HotkeyPicker.keyCodeToString(key)
 
         # Check if entered key is cancel key
         if key == self.cancel_key:
@@ -94,10 +94,10 @@ class HotkeyPicker(QPushButton):
             self.selected_key_string = ''
         else:
             # Ignore key press if key is not in allowed_keys
-            if self.filter_keys and self.allowed_keys and key not in self.allowed_keys:
+            if self.filtering_keys and self.allowed_keys and key not in self.allowed_keys:
                 return
             # Ignore key press if key is in forbidden_keys
-            elif self.filter_keys and self.forbidden_keys and key in self.forbidden_keys:
+            elif self.filtering_keys and self.forbidden_keys and key in self.forbidden_keys:
                 return
 
             self.setText(key_string)
@@ -111,15 +111,15 @@ class HotkeyPicker(QPushButton):
         # Emit signal
         self.__emit_hotkey_changed_signal()
 
-    def get_hotkey(self):
+    def getHotkey(self) -> Qt.Key | int:
         """Get the currently selected hotkey
 
-        :return: int with the key code, 0 if no hotkey is selected
+        :return: key code, 0 if no hotkey is selected
         """
 
         return self.selected_key_code
 
-    def get_hotkey_string(self):
+    def getHotkeyString(self) -> str:
         """Get the name of the currently selected hotkey
 
         :return: string with the key name, empty string if no hotkey is selected
@@ -127,19 +127,19 @@ class HotkeyPicker(QPushButton):
 
         return self.selected_key_string
 
-    def set_hotkey(self, hotkey):
+    def setHotkey(self, hotkey: Qt.Key | int):
         """Set the hotkey
 
         :param hotkey: the key code of the hotkey (e.g. 65 or Qt.Key_A)
         """
 
-        key_string = HotkeyPicker.key_code_to_string(hotkey)
+        key_string = HotkeyPicker.keyCodeToString(hotkey)
 
         # Ignore if filter is enabled and key code is not in allowed keys
-        if self.filter_keys and self.allowed_keys and hotkey not in self.allowed_keys:
+        if self.filtering_keys and self.allowed_keys and hotkey not in self.allowed_keys:
             return
         # Ignore if filter is enabled and key code is in forbidden keys
-        elif self.filter_keys and self.forbidden_keys and hotkey in self.forbidden_keys:
+        elif self.filtering_keys and self.forbidden_keys and hotkey in self.forbidden_keys:
             return
 
         # Input key code valid
@@ -160,12 +160,12 @@ class HotkeyPicker(QPushButton):
         # Emit signal
         self.__emit_hotkey_changed_signal()
 
-    def get_default_text(self):
+    def getDefaultText(self) -> str:
         """Get the default text"""
 
         return self.default_text
 
-    def set_default_text(self, default_text):
+    def setDefaultText(self, default_text: str):
         """Set the default text
 
         :param default_text: the new default text
@@ -175,28 +175,27 @@ class HotkeyPicker(QPushButton):
         if not self.in_selection and self.selected_key_code == 0:
             self.setText(default_text)
 
-    def get_selecting_text(self):
+    def getSelectingText(self) -> str:
         """Get the selecting text"""
 
         return self.selecting_text
 
-    def set_selecting_text(self, selecting_text):
+    def setSelectingText(self, selecting_text: str):
         """Set the selecting text
 
         :param selecting_text: the new selecting text
-        :return:
         """
 
         self.selecting_text = selecting_text
         if self.in_selection:
             self.setText(selecting_text)
 
-    def get_cancel_key(self):
+    def getCancelKey(self) -> Qt.Key:
         """Get the cancel key"""
 
         return self.cancel_key
 
-    def set_cancel_key(self, cancel_key):
+    def setCancelKey(self, cancel_key: Qt.Key | int):
         """Set the cancel key
 
         :param cancel_key: the new cancel key
@@ -204,25 +203,25 @@ class HotkeyPicker(QPushButton):
 
         self.cancel_key = cancel_key
 
-    def get_filter_keys(self):
-        """Get key filtering"""
+    def isFilteringKeys(self) -> bool:
+        """Get whether keys are being filtered"""
 
-        return self.filter_keys
+        return self.filtering_keys
 
-    def set_filter_keys(self, filter_keys):
-        """Set key filtering
+    def filterKeys(self, on: bool):
+        """Enable or disable key filtering
 
-        :param filter_keys: bool if keys should be filtered
+        :param on: if keys should be filtered
         """
 
-        self.filter_keys = filter_keys
+        self.filtering_keys = on
 
-    def get_allowed_keys(self):
+    def getAllowedKeys(self) -> list[Qt.Key]:
         """Get allowed keys"""
 
         return self.allowed_keys
 
-    def set_allowed_keys(self, allowed_keys):
+    def setAllowedKeys(self, allowed_keys: list[Qt.Key | int]):
         """Set allowed keys
 
         :param allowed_keys: the new allowed keys list
@@ -232,12 +231,12 @@ class HotkeyPicker(QPushButton):
             self.forbidden_keys = []
         self.allowed_keys = allowed_keys
 
-    def get_forbidden_keys(self):
+    def getForbiddenKeys(self) -> list[Qt.Key]:
         """Get forbidden keys"""
 
         return self.forbidden_keys
 
-    def set_forbidden_keys(self, forbidden_keys):
+    def setForbiddenKeys(self, forbidden_keys: list[Qt.Key | int]):
         """Set forbidden keys
 
         :param forbidden_keys: the new forbidden keys list
@@ -253,7 +252,7 @@ class HotkeyPicker(QPushButton):
         self.hotkey_changed.emit(self.selected_key_code, self.selected_key_string)
 
     @staticmethod
-    def key_code_to_string(key_code):
+    def keyCodeToString(key_code: Qt.Key | int) -> str:
         """Get the key name from a key code
 
         :param key_code: the key you want to get the name of (e.g. 65 or Qt.Key_A)

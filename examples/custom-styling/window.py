@@ -79,7 +79,7 @@ class Window(QMainWindow):
         self.hotkey_picker_1.move(150, 55)
         self.hotkey_picker_1.setObjectName('hotkey_picker_1')
         self.hotkey_picker_1.hotkey_changed.connect(self.hotkey_picker_1_changed)
-        self.hotkey_picker_1.set_hotkey(Qt.Key_F5)
+        self.hotkey_picker_1.setHotkey(Qt.Key_F5)
 
         # Second hotkey picker (only F1-F12 can be picked)
         self.hotkey_picker_2 = HotkeyPicker(self, filter_keys=True, forbidden_keys=f_keys)
