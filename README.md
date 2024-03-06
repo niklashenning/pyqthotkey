@@ -27,28 +27,21 @@ class Window(QMainWindow):
     def hotkey_changed(self, key, key_name):
         print([key, key_name])
 ```
-Use the `getHotkey()` method to get the key code of the selected hotkey:
+Use the `getHotkey()` and `getHotkeyString()` methods to get the key code and name of the selected hotkey:
 
 ```python
 # Returns int with key code if a hotkey is selected, otherwise 0
 key_code = demo_hotkey_picker.getHotkey()  # e.g. 65 (which is the same as Qt.Key_A)
-```
 
-Use the `getHotkeyString()` method to get the name of the selected hotkey:
-
-```python
 # Returns string with key name if a hotkey is selected, otherwise empty string
 key_name = demo_hotkey_picker.getHotkeyString()  # e.g. 'Shift'
 ```
 
-Use the `setHotkey()` method to set the selected hotkey manually:
+Use the `setHotkey()` method to set the selected hotkey and the `reset()` method to reset the hotkey picker to the default state with no selected hotkey:
 
 ```python
 demo_hotkey_picker.setHotkey(Qt.Key_A)  # could also directly pass int (e.g. 65)
-```
 
-Use the `reset` method to reset the hotkey picker to the default state with no selected hotkey:
-```python
 demo_hotkey_picker.reset()
 ```
 
@@ -65,22 +58,31 @@ More in-depth examples can be found in the [examples](examples) folder
 * **Changing the cancel key used to exit the hotkey selection:**
 
   ```python
-  # Default value: Qt.Key_Escape
+  # On initialization
   demo_hotkey_picker = HotkeyPicker(self, cancel_key=Qt.Key_Return)
+  
+  # Or using the setter
+  demo_hotkey_picker.setCancelKey(Qt.Key_Return)  # Default value: Qt.Key_Escape
   ```
   
 * **Changing the default text of the hotkey picker:**
 
    ```python
-   # Default value: 'None' 
+   # On initialization
    demo_hotkey_picker = HotkeyPicker(self, default_text='Not selected..')
-   ```
   
+   # Or using the setter
+   demo_hotkey_picker.setDefaultText('Not selected..')  # Default value: 'None'
+   ```
+
 * **Changing the text of the hotkey picker that is shown when waiting for a key press:**
 
    ```python
-   # Default value: '..'
+   # On initialization
    demo_hotkey_picker = HotkeyPicker(self, selecting_text='Selecting..')
+  
+   # Or using the setter
+   demo_hotkey_picker.setSelectingText('Selecting..')  # Default value: '..'
    ```
 
 * **Only allowing specific keys to be selected:**
@@ -89,8 +91,13 @@ More in-depth examples can be found in the [examples](examples) folder
    # List of allowed keys (no other key can be selected)
    keys = [Qt.Key_F1, Qt.Key_F2, Qt.Key_F3, Qt.Key_F4, Qt.Key_F5, Qt.Key_F6,
            Qt.Key_F7, Qt.Key_F8, Qt.Key_F9, Qt.Key_F10, Qt.Key_F11, Qt.Key_F12]
-  
+   
+   # On initialization 
    demo_hotkey_picker = HotkeyPicker(self, filter_keys=True, allowed_keys=keys)
+   
+   # Or using the setter
+   demo_hotkey_picker.filterKeys(True)
+   demo_hotkey_picker.setAllowedKeys(keys)
    ```
 
 * **Not allowing specific keys to be selected:**
@@ -98,8 +105,13 @@ More in-depth examples can be found in the [examples](examples) folder
    ```python
    # List of forbidden keys (every other key can be selected)
    keys = [Qt.Key_F1, Qt.Key_F2, Qt.Key_F3, Qt.Key_F4, Qt.Key_F5]
-  
+   
+   # On initialization 
    demo_hotkey_picker = HotkeyPicker(self, filter_keys=True, forbidden_keys=keys)
+   
+   # Or using the setter
+   demo_hotkey_picker.filterKeys(True)
+   demo_hotkey_picker.setForbiddenKeys(keys)
    ```
   **Note**: Only one of these filter options can be set per hotkey picker, meaning you can either specify the exact keys you want to allow or specify the exact keys you want to forbid.
 
