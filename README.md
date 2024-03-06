@@ -21,7 +21,7 @@ class Window(QMainWindow):
         # Add hotkey picker with default settings
         demo_hotkey_picker = HotkeyPicker(self)
         # Connect change event
-        demo_hotkey_picker.hotkey_changed.connect(self.hotkey_changed)
+        demo_hotkey_picker.hotkeyChanged.connect(self.hotkey_changed)
     
     # Called every time the picked hotkey changes
     def hotkey_changed(self, key, key_name):

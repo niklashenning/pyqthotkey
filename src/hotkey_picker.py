@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QPushButton
 class HotkeyPicker(QPushButton):
 
     # Signal that hotkey has changed
-    hotkey_changed = pyqtSignal(int, str)
+    hotkeyChanged = pyqtSignal(int, str)
 
     # Key code map
     key_code_map = {}
@@ -249,7 +249,7 @@ class HotkeyPicker(QPushButton):
     def __emit_hotkey_changed_signal(self):
         """Emit a signal that the selected hotkey has changed"""
 
-        self.hotkey_changed.emit(self.selected_key_code, self.selected_key_string)
+        self.hotkeyChanged.emit(self.selected_key_code, self.selected_key_string)
 
     @staticmethod
     def keyCodeToString(key_code: Qt.Key | int) -> str:
