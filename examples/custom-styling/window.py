@@ -78,15 +78,15 @@ class Window(QMainWindow):
         self.hotkey_picker_1.setFixedWidth(140)
         self.hotkey_picker_1.move(150, 55)
         self.hotkey_picker_1.setObjectName('hotkey_picker_1')
-        self.hotkey_picker_1.hotkey_changed.connect(self.hotkey_picker_1_changed)
-        self.hotkey_picker_1.set_hotkey(Qt.Key_F5)
+        self.hotkey_picker_1.hotkeyChanged.connect(self.hotkey_picker_1_changed)
+        self.hotkey_picker_1.setHotkey(Qt.Key_F5)
 
         # Second hotkey picker (only F1-F12 can be picked)
         self.hotkey_picker_2 = HotkeyPicker(self, filter_keys=True, forbidden_keys=f_keys)
         self.hotkey_picker_2.setFixedWidth(140)
         self.hotkey_picker_2.move(150, 95)
         self.hotkey_picker_2.setObjectName('hotkey_picker_2')
-        self.hotkey_picker_2.hotkey_changed.connect(self.hotkey_picker_2_changed)
+        self.hotkey_picker_2.hotkeyChanged.connect(self.hotkey_picker_2_changed)
 
         # Third hotkey picker (everything except for F1-F12 keys can be picked)
         self.hotkey_picker_3 = HotkeyPicker(self, default_text='Not selected..',
@@ -94,7 +94,7 @@ class Window(QMainWindow):
         self.hotkey_picker_3.setFixedWidth(140)
         self.hotkey_picker_3.move(150, 135)
         self.hotkey_picker_3.setObjectName('hotkey_picker_3')
-        self.hotkey_picker_3.hotkey_changed.connect(self.hotkey_picker_3_changed)
+        self.hotkey_picker_3.hotkeyChanged.connect(self.hotkey_picker_3_changed)
 
     def hotkey_picker_1_changed(self, key, key_name):
         # Handle change of hotkey 1
@@ -129,7 +129,7 @@ class Window(QMainWindow):
 
     def mousePressEvent(self, event):
         # Window drag functionality
-        if event.button() == Qt.LeftButton:
+        if event.button() == Qt.LeftButton and self.window_bar.geometry().contains(event.pos()):
             self.offset = event.pos()
         else:
             super().mousePressEvent(event)
