@@ -1,11 +1,11 @@
-from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtWidgets import QPushButton
+from qtpy.QtCore import Qt, Signal
+from qtpy.QtWidgets import QPushButton
 
 
 class HotkeyPicker(QPushButton):
 
     # Signal that hotkey has changed
-    hotkeyChanged = pyqtSignal(int, str)
+    hotkeyChanged = Signal(int, str)
 
     # Key code map
     key_code_map = {}
@@ -14,12 +14,13 @@ class HotkeyPicker(QPushButton):
             key_code_map[value] = key.partition('_')[2]
 
     # Manually change name for some keys
-    key_code_map[Qt.Key_Adiaeresis] = 'Ä'
-    key_code_map[Qt.Key_Odiaeresis] = 'Ö'
-    key_code_map[Qt.Key_Udiaeresis] = 'Ü'
+    key_code_map[Qt.Key.Key_Adiaeresis] = 'Ä'
+    key_code_map[Qt.Key.Key_Odiaeresis] = 'Ö'
+    key_code_map[Qt.Key.Key_Udiaeresis] = 'Ü'
 
-    def __init__(self, parent=None, default_text='None', selecting_text='..',
-                 cancel_key=Qt.Key_Escape, filter_keys=False, allowed_keys=[], forbidden_keys=[]):
+    def __init__(self, parent=None, default_text: str = 'None', selecting_text: str = '..',
+                 cancel_key: Qt.Key = Qt.Key.Key_Escape, filter_keys: bool = False,
+                 allowed_keys: list[Qt.Key] = [], forbidden_keys: list[Qt.Key] = []):
         """Create a new HotkeyPicker instance
 
         :param parent: the parent widget
@@ -51,7 +52,7 @@ class HotkeyPicker(QPushButton):
         self.in_selection = False
 
         # Prevent the hotkey picker from focusing automatically (e.g. if it is the only widget)
-        self.setFocusPolicy(Qt.ClickFocus)
+        self.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
 
         self.setText(self.default_text)
 
