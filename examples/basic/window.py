@@ -1,5 +1,5 @@
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QMainWindow, QLabel
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QMainWindow, QLabel
 from src.pyqthotkey import HotkeyPicker
 
 
@@ -30,7 +30,7 @@ class Window(QMainWindow):
         self.hotkey_picker_1 = HotkeyPicker(self)
         self.hotkey_picker_1.move(170, 32)
         self.hotkey_picker_1.hotkeyChanged.connect(self.hotkey_picker_1_changed)
-        self.hotkey_picker_1.setHotkey(Qt.Key_F5)
+        self.hotkey_picker_1.setHotkey(Qt.Key.Key_F5)
 
         # Add second hotkey picker with default settings
         self.hotkey_picker_2 = HotkeyPicker(self)
