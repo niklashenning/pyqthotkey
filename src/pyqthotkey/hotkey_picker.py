@@ -5,7 +5,7 @@ from qtpy.QtWidgets import QPushButton
 class HotkeyPicker(QPushButton):
 
     # Signal that hotkey has changed
-    hotkeyChanged = Signal(int, str)
+    hotkeyChanged = Signal(object, object)
 
     # Key code map
     __key_code_map = {}
@@ -47,8 +47,7 @@ class HotkeyPicker(QPushButton):
             self.__blacklisted_keys = []
 
         # Init variables
-        self.__selected_key_code = 0
-        self.__selected_key_string = ''
+        self.__selected_key = None
         self.__in_selection = False
 
         self.setText(self.__default_text)
@@ -72,11 +71,11 @@ class HotkeyPicker(QPushButton):
         """
 
         # Focus out without a new key being selected
-        if self.__selected_key_code == 0 and self.__in_selection:
+        if self.__selected_key is None and self.__in_selection:
             self.setText(self.__default_text)
             self.__in_selection = False
-        elif self.__selected_key_code != 0 and self.__in_selection:
-            self.setText(HotkeyPicker.keyCodeToString(self.__selected_key_code))
+        elif self.__selected_key is not None and self.__in_selection:
+            self.setText(HotkeyPicker.keyCodeToString(self.__selected_key))
             self.__in_selection = False
 
     def keyPressEvent(self, event):
@@ -86,13 +85,11 @@ class HotkeyPicker(QPushButton):
         """
 
         key = event.key()
-        key_string = HotkeyPicker.keyCodeToString(key)
 
         # Check if entered key is cancel key
         if key == self.__cancel_key:
             self.setText(self.__default_text)
-            self.__selected_key_code = 0
-            self.__selected_key_string = ''
+            self.__selected_key = None
         else:
             # Ignore key press if key is not in whitelisted_keys
             if self.__key_filter_enabled and self.__whitelisted_keys and key not in self.__whitelisted_keys:
@@ -101,9 +98,8 @@ class HotkeyPicker(QPushButton):
             elif self.__key_filter_enabled and self.__blacklisted_keys and key in self.__blacklisted_keys:
                 return
 
-            self.setText(key_string)
-            self.__selected_key_code = key
-            self.__selected_key_string = key_string
+            self.setText(HotkeyPicker.keyCodeToString(key))
+            self.__selected_key = key
 
         # Clear selection and widget focus
         self.__in_selection = False
@@ -112,13 +108,13 @@ class HotkeyPicker(QPushButton):
         # Emit signal
         self.__emit_hotkey_changed_signal()
 
-    def getHotkey(self) -> Qt.Key | int:
+    def getHotkey(self) -> Qt.Key | None:
         """Get the currently selected hotkey
 
         :return: key code, 0 if no hotkey is selected
         """
 
-        return self.__selected_key_code
+        return self.__selected_key
 
     def getHotkeyString(self) -> str:
         """Get the name of the currently selected hotkey
@@ -126,7 +122,7 @@ class HotkeyPicker(QPushButton):
         :return: string with the key name, empty string if no hotkey is selected
         """
 
-        return self.__selected_key_string
+        return HotkeyPicker.keyCodeToString(self.__selected_key)
 
     def setHotkey(self, hotkey: Qt.Key | int):
         """Set the hotkey
@@ -134,19 +130,20 @@ class HotkeyPicker(QPushButton):
         :param hotkey: the key code of the hotkey (e.g. 65 or Qt.Key_A)
         """
 
-        key_string = HotkeyPicker.keyCodeToString(hotkey)
-
         # Ignore if filter is enabled and key code is not in whitelisted_keys
-        if self.__key_filter_enabled and self.__whitelisted_keys and hotkey not in self.__whitelisted_keys:
+        if (self.__key_filter_enabled and self.__whitelisted_keys
+                and hotkey not in self.__whitelisted_keys):
             return
         # Ignore if filter is enabled and key code is in blacklisted_keys
-        elif self.__key_filter_enabled and self.__blacklisted_keys and hotkey in self.__blacklisted_keys:
+        elif (self.__key_filter_enabled and self.__blacklisted_keys
+              and hotkey in self.__blacklisted_keys):
             return
 
-        # Input key code valid
+        # Set hotkey if input key valid
+        key_string = HotkeyPicker.keyCodeToString(hotkey)
+
         if key_string is not None:
-            self.__selected_key_code = hotkey
-            self.__selected_key_string = key_string
+            self.__selected_key = int(hotkey)
             self.setText(key_string)
             # Emit signal
             self.__emit_hotkey_changed_signal()
@@ -155,8 +152,7 @@ class HotkeyPicker(QPushButton):
         """Reset the hotkey picker to the default state with no hotkey selected"""
 
         self.setText(self.__default_text)
-        self.__selected_key_code = 0
-        self.__selected_key_string = ''
+        self.__selected_key = None
 
         # Emit signal
         self.__emit_hotkey_changed_signal()
@@ -173,7 +169,7 @@ class HotkeyPicker(QPushButton):
         """
 
         self.__default_text = default_text
-        if not self.__in_selection and self.__selected_key_code == 0:
+        if not self.__in_selection and self.__selected_key is None:
             self.setText(default_text)
 
     def getSelectionText(self) -> str:
@@ -259,7 +255,8 @@ class HotkeyPicker(QPushButton):
     def __emit_hotkey_changed_signal(self):
         """Emit a signal that the selected hotkey has changed"""
 
-        self.hotkeyChanged.emit(self.__selected_key_code, self.__selected_key_string)
+        self.hotkeyChanged.emit(self.__selected_key,
+                                HotkeyPicker.keyCodeToString(self.__selected_key))
 
     @staticmethod
     def keyCodeToString(key_code: Qt.Key | int) -> str:

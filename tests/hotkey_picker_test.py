@@ -11,8 +11,8 @@ def test_initial_values(qtbot):
     hotkey_picker = HotkeyPicker()
     qtbot.addWidget(hotkey_picker)
 
-    assert hotkey_picker.getHotkey() == 0
-    assert hotkey_picker.getHotkeyString() == ''
+    assert hotkey_picker.getHotkey() is None
+    assert hotkey_picker.getHotkeyString() is None
     assert hotkey_picker.getDefaultText() == 'None'
     assert hotkey_picker.getSelectionText() == '..'
     assert hotkey_picker.getCancelKey() == Qt.Key.Key_Escape
@@ -55,7 +55,7 @@ def test_reset(qtbot):
 
     hotkey_picker.setHotkey(Qt.Key.Key_F5)
     hotkey_picker.reset()
-    assert hotkey_picker.getHotkey() == 0
+    assert hotkey_picker.getHotkey() is None
 
 
 def test_set_default_text(qtbot):
@@ -123,7 +123,7 @@ def test_key_filter_whitelist(qtbot):
     qtbot.addWidget(hotkey_picker)
 
     QTest.keyEvent(QTest.KeyAction.Click, hotkey_picker, Qt.Key.Key_F8)
-    assert hotkey_picker.getHotkey() == 0
+    assert hotkey_picker.getHotkey() is None
 
     QTest.keyEvent(QTest.KeyAction.Click, hotkey_picker, Qt.Key.Key_F2)
     assert hotkey_picker.getHotkey() == Qt.Key.Key_F2
@@ -191,3 +191,4 @@ def test_key_code_to_string(qtbot):
     assert HotkeyPicker.keyCodeToString(Qt.Key.Key_Escape) == 'Escape'
     assert HotkeyPicker.keyCodeToString(Qt.Key.Key_Control) == 'Control'
     assert HotkeyPicker.keyCodeToString(Qt.Key.Key_F12) == 'F12'
+    assert HotkeyPicker.keyCodeToString(0) is None
