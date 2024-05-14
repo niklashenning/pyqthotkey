@@ -75,7 +75,7 @@ class HotkeyPicker(QPushButton):
             self.setText(self.__default_text)
             self.__in_selection = False
         elif self.__selected_key is not None and self.__in_selection:
-            self.setText(HotkeyPicker.keyCodeToString(self.__selected_key))
+            self.setText(HotkeyPicker.keyToString(self.__selected_key))
             self.__in_selection = False
 
     def keyPressEvent(self, event):
@@ -98,7 +98,7 @@ class HotkeyPicker(QPushButton):
             elif self.__key_filter_enabled and self.__blacklisted_keys and key in self.__blacklisted_keys:
                 return
 
-            self.setText(HotkeyPicker.keyCodeToString(key))
+            self.setText(HotkeyPicker.keyToString(key))
             self.__selected_key = key
 
         # Clear selection and widget focus
@@ -122,7 +122,7 @@ class HotkeyPicker(QPushButton):
         :return: string with the key name, None if no hotkey is selected
         """
 
-        return HotkeyPicker.keyCodeToString(self.__selected_key)
+        return HotkeyPicker.keyToString(self.__selected_key)
 
     def setHotkey(self, hotkey: Qt.Key | int):
         """Set the hotkey
@@ -140,7 +140,7 @@ class HotkeyPicker(QPushButton):
             return
 
         # Set hotkey if input key valid
-        key_string = HotkeyPicker.keyCodeToString(hotkey)
+        key_string = HotkeyPicker.keyToString(hotkey)
 
         if key_string is not None:
             self.__selected_key = int(hotkey)
@@ -256,14 +256,24 @@ class HotkeyPicker(QPushButton):
         """Emit a signal that the selected hotkey has changed"""
 
         self.hotkeyChanged.emit(self.__selected_key,
-                                HotkeyPicker.keyCodeToString(self.__selected_key))
+                                HotkeyPicker.keyToString(self.__selected_key))
 
     @staticmethod
-    def keyCodeToString(key_code: Qt.Key | int) -> str:
-        """Get the key name from a key code
+    def keyToString(key: Qt.Key | int) -> str:
+        """Get the key name from a key
 
-        :param key_code: the key you want to get the name of (e.g. 65 or Qt.Key_A)
-        :return: name of the key as string
+        :param key: key you want to get the name of (e.g. 65 or Qt.Key_A)
+        :return: name of the key
         """
 
-        return HotkeyPicker.__key_code_map.get(key_code)
+        return HotkeyPicker.__key_code_map.get(key)
+
+    @staticmethod
+    def setKeyName(key: Qt.Key, name: str):
+        """Override the name of a key
+
+        :param key: key you want to rename
+        :param name: new name of the key
+        """
+
+        HotkeyPicker.__key_code_map[key] = name
