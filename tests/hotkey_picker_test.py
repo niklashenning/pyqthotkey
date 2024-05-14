@@ -17,8 +17,8 @@ def test_initial_values(qtbot):
     assert hotkey_picker.getSelectionText() == '..'
     assert hotkey_picker.getCancelKey() == Qt.Key.Key_Escape
     assert hotkey_picker.isKeyFilterEnabled() == False
-    assert hotkey_picker.getAllowedKeys() == []
-    assert hotkey_picker.getForbiddenKeys() == []
+    assert hotkey_picker.getWhitelistedKeys() == []
+    assert hotkey_picker.getBlacklistedKeys() == []
 
 
 def test_set_hotkey(qtbot):
@@ -31,16 +31,16 @@ def test_set_hotkey(qtbot):
     hotkey_picker.setHotkey(Qt.Key.Key_F8)
     assert hotkey_picker.getHotkey() == Qt.Key.Key_F8
 
-    # Test setting hotkey with custom allowed keys
+    # Test setting hotkey with custom whitelisted keys
     hotkey_picker.setKeyFilterEnabled(True)
-    hotkey_picker.setAllowedKeys([Qt.Key.Key_Return, Qt.Key.Key_Enter, Qt.Key.Key_Control])
+    hotkey_picker.setWhitelistedKeys([Qt.Key.Key_Return, Qt.Key.Key_Enter, Qt.Key.Key_Control])
     hotkey_picker.setHotkey(Qt.Key.Key_A)
     assert hotkey_picker.getHotkey() == Qt.Key.Key_F8
     hotkey_picker.setHotkey(Qt.Key.Key_Control)
     assert hotkey_picker.getHotkey() == Qt.Key.Key_Control
 
-    # Test setting hotkey with custom forbidden keys
-    hotkey_picker.setForbiddenKeys([Qt.Key.Key_Return, Qt.Key.Key_Enter, Qt.Key.Key_Control])
+    # Test setting hotkey with blacklisted keys
+    hotkey_picker.setBlacklistedKeys([Qt.Key.Key_Return, Qt.Key.Key_Enter, Qt.Key.Key_Control])
     hotkey_picker.setHotkey(Qt.Key.Key_A)
     assert hotkey_picker.getHotkey() == Qt.Key.Key_A
     hotkey_picker.setHotkey(Qt.Key.Key_Control)
@@ -114,12 +114,12 @@ def test_key_event(qtbot):
     assert hotkey_picker.getHotkey() == Qt.Key.Key_F8
 
 
-def test_key_filter_allowed(qtbot):
-    """Test the hotkey picker with a key filter enabled
-     and allowed keys passed"""
+def test_key_filter_whitelist(qtbot):
+    """Test the hotkey picker with a key filter
+     and whitelist enabled"""
 
     hotkey_picker = HotkeyPicker(key_filter_enabled=True,
-                                 allowed_keys=[Qt.Key.Key_F1, Qt.Key.Key_F2, Qt.Key.Key_F3])
+                                 whitelisted_keys=[Qt.Key.Key_F1, Qt.Key.Key_F2, Qt.Key.Key_F3])
     qtbot.addWidget(hotkey_picker)
 
     QTest.keyEvent(QTest.KeyAction.Click, hotkey_picker, Qt.Key.Key_F8)
@@ -129,12 +129,12 @@ def test_key_filter_allowed(qtbot):
     assert hotkey_picker.getHotkey() == Qt.Key.Key_F2
 
 
-def test_key_filter_forbidden(qtbot):
-    """Test the hotkey picker with a key filter enabled
-     and forbidden keys passed"""
+def test_key_filter_blacklist(qtbot):
+    """Test the hotkey picker with a key filter
+     and blacklist enabled"""
 
     hotkey_picker = HotkeyPicker(key_filter_enabled=True,
-                                 forbidden_keys=[Qt.Key.Key_F1, Qt.Key.Key_F2, Qt.Key.Key_F3])
+                                 blacklisted_keys=[Qt.Key.Key_F1, Qt.Key.Key_F2, Qt.Key.Key_F3])
     qtbot.addWidget(hotkey_picker)
 
     QTest.keyEvent(QTest.KeyAction.Click, hotkey_picker, Qt.Key.Key_F8)
@@ -146,26 +146,26 @@ def test_key_filter_forbidden(qtbot):
 
 def test_key_filter_both(qtbot):
     """Test the hotkey picker with a key filter enabled
-     and both allowed keys and forbidden keys passed"""
+     and both a key whitelist and a key blacklist passed"""
 
     hotkey_picker = HotkeyPicker(key_filter_enabled=True,
-                                 allowed_keys=[Qt.Key.Key_F1, Qt.Key.Key_F2, Qt.Key.Key_F3],
-                                 forbidden_keys=[Qt.Key.Key_F4, Qt.Key.Key_F5, Qt.Key.Key_F6])
+                                 whitelisted_keys=[Qt.Key.Key_F1, Qt.Key.Key_F2, Qt.Key.Key_F3],
+                                 blacklisted_keys=[Qt.Key.Key_F4, Qt.Key.Key_F5, Qt.Key.Key_F6])
     qtbot.addWidget(hotkey_picker)
 
-    # Test setting both allowed keys and forbidden keys in constructor
-    assert hotkey_picker.getAllowedKeys() == [Qt.Key.Key_F1, Qt.Key.Key_F2, Qt.Key.Key_F3]
-    assert hotkey_picker.getForbiddenKeys() == []
+    # Test setting both whitelisted keys and blacklisted keys in constructor
+    assert hotkey_picker.getWhitelistedKeys() == [Qt.Key.Key_F1, Qt.Key.Key_F2, Qt.Key.Key_F3]
+    assert hotkey_picker.getBlacklistedKeys() == []
 
-    # Test setting forbidden keys while allowed keys are already set
-    hotkey_picker.setForbiddenKeys([Qt.Key.Key_A, Qt.Key.Key_B, Qt.Key.Key_C])
-    assert hotkey_picker.getAllowedKeys() == []
-    assert hotkey_picker.getForbiddenKeys() == [Qt.Key.Key_A, Qt.Key.Key_B, Qt.Key.Key_C]
+    # Test setting blacklisted keys while whitelisted keys are already set
+    hotkey_picker.setBlacklistedKeys([Qt.Key.Key_A, Qt.Key.Key_B, Qt.Key.Key_C])
+    assert hotkey_picker.getWhitelistedKeys() == []
+    assert hotkey_picker.getBlacklistedKeys() == [Qt.Key.Key_A, Qt.Key.Key_B, Qt.Key.Key_C]
 
-    # Test setting allowed keys while forbidden keys are already set
-    hotkey_picker.setAllowedKeys([Qt.Key.Key_D, Qt.Key.Key_E, Qt.Key.Key_F])
-    assert hotkey_picker.getAllowedKeys() == [Qt.Key.Key_D, Qt.Key.Key_E, Qt.Key.Key_F]
-    assert hotkey_picker.getForbiddenKeys() == []
+    # Test setting whitelisted keys while blacklisted keys are already set
+    hotkey_picker.setWhitelistedKeys([Qt.Key.Key_D, Qt.Key.Key_E, Qt.Key.Key_F])
+    assert hotkey_picker.getWhitelistedKeys() == [Qt.Key.Key_D, Qt.Key.Key_E, Qt.Key.Key_F]
+    assert hotkey_picker.getBlacklistedKeys() == []
 
 
 def test_focus_out_with_selected_key(qtbot):

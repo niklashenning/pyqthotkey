@@ -20,7 +20,7 @@ class HotkeyPicker(QPushButton):
 
     def __init__(self, parent=None, default_text: str = 'None', selection_text: str = '..',
                  cancel_key: Qt.Key = Qt.Key.Key_Escape, key_filter_enabled: bool = False,
-                 allowed_keys: list[Qt.Key] = [], forbidden_keys: list[Qt.Key] = []):
+                 whitelisted_keys: list[Qt.Key] = [], blacklisted_keys: list[Qt.Key] = []):
         """Create a new HotkeyPicker instance
 
         :param parent: the parent widget
@@ -28,8 +28,8 @@ class HotkeyPicker(QPushButton):
         :param selection_text: the text shown when in selection
         :param cancel_key: the key that is used to exit the current key selection
         :param key_filter_enabled: if the hotkey picker should use a filter instead of accepting every key
-        :param allowed_keys: list of keys that can be chosen (filter_keys must be enabled)
-        :param forbidden_keys: list of keys that cannot be chosen (filter_keys must be enabled)
+        :param whitelisted_keys: list of keys that can be chosen (key_filter_enabled must be True)
+        :param blacklisted_keys: list of keys that cannot be chosen (key_filter_enabled must be True)
         """
 
         super(HotkeyPicker, self).__init__(parent)
@@ -39,12 +39,12 @@ class HotkeyPicker(QPushButton):
         self.__selection_text = selection_text
         self.__cancel_key = cancel_key
         self.__key_filter_enabled = key_filter_enabled
-        self.__allowed_keys = allowed_keys
-        self.__forbidden_keys = forbidden_keys
+        self.__whitelisted_keys = whitelisted_keys
+        self.__blacklisted_keys = blacklisted_keys
 
-        # Make sure either allowed_keys or forbidden_keys is emtpy
-        if allowed_keys and forbidden_keys:
-            self.__forbidden_keys = []
+        # Make sure either whitelisted_keys or blacklisted_keys is emtpy
+        if whitelisted_keys and blacklisted_keys:
+            self.__blacklisted_keys = []
 
         # Init variables
         self.__selected_key_code = 0
@@ -94,11 +94,11 @@ class HotkeyPicker(QPushButton):
             self.__selected_key_code = 0
             self.__selected_key_string = ''
         else:
-            # Ignore key press if key is not in allowed_keys
-            if self.__key_filter_enabled and self.__allowed_keys and key not in self.__allowed_keys:
+            # Ignore key press if key is not in whitelisted_keys
+            if self.__key_filter_enabled and self.__whitelisted_keys and key not in self.__whitelisted_keys:
                 return
-            # Ignore key press if key is in forbidden_keys
-            elif self.__key_filter_enabled and self.__forbidden_keys and key in self.__forbidden_keys:
+            # Ignore key press if key is in blacklisted_keys
+            elif self.__key_filter_enabled and self.__blacklisted_keys and key in self.__blacklisted_keys:
                 return
 
             self.setText(key_string)
@@ -136,11 +136,11 @@ class HotkeyPicker(QPushButton):
 
         key_string = HotkeyPicker.keyCodeToString(hotkey)
 
-        # Ignore if filter is enabled and key code is not in allowed keys
-        if self.__key_filter_enabled and self.__allowed_keys and hotkey not in self.__allowed_keys:
+        # Ignore if filter is enabled and key code is not in whitelisted_keys
+        if self.__key_filter_enabled and self.__whitelisted_keys and hotkey not in self.__whitelisted_keys:
             return
-        # Ignore if filter is enabled and key code is in forbidden keys
-        elif self.__key_filter_enabled and self.__forbidden_keys and hotkey in self.__forbidden_keys:
+        # Ignore if filter is enabled and key code is in blacklisted_keys
+        elif self.__key_filter_enabled and self.__blacklisted_keys and hotkey in self.__blacklisted_keys:
             return
 
         # Input key code valid
@@ -205,7 +205,10 @@ class HotkeyPicker(QPushButton):
         self.__cancel_key = cancel_key
 
     def isKeyFilterEnabled(self) -> bool:
-        """Get whether keys are being filtered"""
+        """Get whether keys are being filtered
+
+        :return: whether keys are being filtered
+        """
 
         return self.__key_filter_enabled
 
@@ -217,35 +220,41 @@ class HotkeyPicker(QPushButton):
 
         self.__key_filter_enabled = on
 
-    def getAllowedKeys(self) -> list[Qt.Key]:
-        """Get allowed keys"""
+    def getWhitelistedKeys(self) -> list[Qt.Key]:
+        """Get list of whitelisted keys
 
-        return self.__allowed_keys
-
-    def setAllowedKeys(self, allowed_keys: list[Qt.Key | int]):
-        """Set allowed keys
-
-        :param allowed_keys: the new allowed keys list
+        :return: whitelisted keys
         """
 
-        if allowed_keys and self.__forbidden_keys:
-            self.__forbidden_keys = []
-        self.__allowed_keys = allowed_keys
+        return self.__whitelisted_keys
 
-    def getForbiddenKeys(self) -> list[Qt.Key]:
-        """Get forbidden keys"""
+    def setWhitelistedKeys(self, whitelisted_keys: list[Qt.Key | int]):
+        """Set whitelisted keys (keys that can be selected)
 
-        return self.__forbidden_keys
-
-    def setForbiddenKeys(self, forbidden_keys: list[Qt.Key | int]):
-        """Set forbidden keys
-
-        :param forbidden_keys: the new forbidden keys list
+        :param whitelisted_keys: the new list of whitelisted keys
         """
 
-        if forbidden_keys and self.__allowed_keys:
-            self.__allowed_keys = []
-        self.__forbidden_keys = forbidden_keys
+        if whitelisted_keys and self.__blacklisted_keys:
+            self.__blacklisted_keys = []
+        self.__whitelisted_keys = whitelisted_keys
+
+    def getBlacklistedKeys(self) -> list[Qt.Key]:
+        """Get list of blacklisted keys
+
+        :return: blacklisted keys
+        """
+
+        return self.__blacklisted_keys
+
+    def setBlacklistedKeys(self, blacklisted_keys: list[Qt.Key | int]):
+        """Set blacklisted keys (keys that cannot be selected)
+
+        :param blacklisted_keys: the new list of blacklisted keys
+        """
+
+        if blacklisted_keys and self.__whitelisted_keys:
+            self.__whitelisted_keys = []
+        self.__blacklisted_keys = blacklisted_keys
 
     def __emit_hotkey_changed_signal(self):
         """Emit a signal that the selected hotkey has changed"""

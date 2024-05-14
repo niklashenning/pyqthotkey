@@ -85,7 +85,7 @@ class Window(QMainWindow):
 
         # Second hotkey picker (only F1-F12 can be picked)
         self.hotkey_picker_2 = HotkeyPicker(self, key_filter_enabled=True,
-                                            allowed_keys=f_keys)
+                                            whitelisted_keys=f_keys)
         self.hotkey_picker_2.setFixedWidth(140)
         self.hotkey_picker_2.move(150, 95)
         self.hotkey_picker_2.setObjectName('hotkey_picker_2')
@@ -93,7 +93,7 @@ class Window(QMainWindow):
 
         # Third hotkey picker (everything except for F1-F12 keys can be picked)
         self.hotkey_picker_3 = HotkeyPicker(self, default_text='Not selected..',
-                                            key_filter_enabled=True, forbidden_keys=f_keys)
+                                            key_filter_enabled=True, blacklisted_keys=f_keys)
         self.hotkey_picker_3.setFixedWidth(140)
         self.hotkey_picker_3.move(150, 135)
         self.hotkey_picker_3.setObjectName('hotkey_picker_3')
