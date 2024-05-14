@@ -108,10 +108,10 @@ class HotkeyPicker(QPushButton):
         # Emit signal
         self.__emit_hotkey_changed_signal()
 
-    def getHotkey(self) -> Qt.Key | None:
+    def getHotkey(self) -> int | None:
         """Get the currently selected hotkey
 
-        :return: key code, 0 if no hotkey is selected
+        :return: key code, None if no hotkey is selected
         """
 
         return self.__selected_key
@@ -119,7 +119,7 @@ class HotkeyPicker(QPushButton):
     def getHotkeyString(self) -> str:
         """Get the name of the currently selected hotkey
 
-        :return: string with the key name, empty string if no hotkey is selected
+        :return: string with the key name, None if no hotkey is selected
         """
 
         return HotkeyPicker.keyCodeToString(self.__selected_key)
@@ -127,7 +127,7 @@ class HotkeyPicker(QPushButton):
     def setHotkey(self, hotkey: Qt.Key | int):
         """Set the hotkey
 
-        :param hotkey: the key code of the hotkey (e.g. 65 or Qt.Key_A)
+        :param hotkey: the key code of the hotkey (e.g. 65 or Qt.Key.Key_A)
         """
 
         # Ignore if filter is enabled and key code is not in whitelisted_keys
