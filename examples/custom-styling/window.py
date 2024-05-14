@@ -74,7 +74,8 @@ class Window(QMainWindow):
                   Qt.Key_F7, Qt.Key_F8, Qt.Key_F9, Qt.Key_F10, Qt.Key_F11, Qt.Key_F12]
 
         # First hotkey picker (custom text when in selection and custom cancel key)
-        self.hotkey_picker_1 = HotkeyPicker(self, selecting_text='Selecting..', cancel_key=Qt.Key_Return)
+        self.hotkey_picker_1 = HotkeyPicker(self, selection_text='Selecting..',
+                                            cancel_key=Qt.Key_Return)
         self.hotkey_picker_1.setFixedWidth(140)
         self.hotkey_picker_1.move(150, 55)
         self.hotkey_picker_1.setObjectName('hotkey_picker_1')
@@ -82,7 +83,8 @@ class Window(QMainWindow):
         self.hotkey_picker_1.setHotkey(Qt.Key_F5)
 
         # Second hotkey picker (only F1-F12 can be picked)
-        self.hotkey_picker_2 = HotkeyPicker(self, filter_keys=True, forbidden_keys=f_keys)
+        self.hotkey_picker_2 = HotkeyPicker(self, key_filter_enabled=True,
+                                            forbidden_keys=f_keys)
         self.hotkey_picker_2.setFixedWidth(140)
         self.hotkey_picker_2.move(150, 95)
         self.hotkey_picker_2.setObjectName('hotkey_picker_2')
@@ -90,7 +92,7 @@ class Window(QMainWindow):
 
         # Third hotkey picker (everything except for F1-F12 keys can be picked)
         self.hotkey_picker_3 = HotkeyPicker(self, default_text='Not selected..',
-                                            filter_keys=True, allowed_keys=f_keys)
+                                            key_filter_enabled=True, allowed_keys=f_keys)
         self.hotkey_picker_3.setFixedWidth(140)
         self.hotkey_picker_3.move(150, 135)
         self.hotkey_picker_3.setObjectName('hotkey_picker_3')

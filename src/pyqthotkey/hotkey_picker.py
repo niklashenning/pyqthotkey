@@ -18,16 +18,16 @@ class HotkeyPicker(QPushButton):
     __key_code_map[Qt.Key.Key_Odiaeresis] = 'Ö'
     __key_code_map[Qt.Key.Key_Udiaeresis] = 'Ü'
 
-    def __init__(self, parent=None, default_text: str = 'None', selecting_text: str = '..',
-                 cancel_key: Qt.Key = Qt.Key.Key_Escape, filter_keys: bool = False,
+    def __init__(self, parent=None, default_text: str = 'None', selection_text: str = '..',
+                 cancel_key: Qt.Key = Qt.Key.Key_Escape, key_filter_enabled: bool = False,
                  allowed_keys: list[Qt.Key] = [], forbidden_keys: list[Qt.Key] = []):
         """Create a new HotkeyPicker instance
 
         :param parent: the parent widget
         :param default_text: the text shown when no hotkey is selected
-        :param selecting_text: the text shown when in selection
+        :param selection_text: the text shown when in selection
         :param cancel_key: the key that is used to exit the current key selection
-        :param filter_keys: if the hotkey picker should use a filter instead of accepting every key
+        :param key_filter_enabled: if the hotkey picker should use a filter instead of accepting every key
         :param allowed_keys: list of keys that can be chosen (filter_keys must be enabled)
         :param forbidden_keys: list of keys that cannot be chosen (filter_keys must be enabled)
         """
@@ -36,9 +36,9 @@ class HotkeyPicker(QPushButton):
 
         # Init arguments
         self.__default_text = default_text
-        self.__selecting_text = selecting_text
+        self.__selection_text = selection_text
         self.__cancel_key = cancel_key
-        self.__filtering_keys = filter_keys
+        self.__key_filter_enabled = key_filter_enabled
         self.__allowed_keys = allowed_keys
         self.__forbidden_keys = forbidden_keys
 
@@ -63,7 +63,7 @@ class HotkeyPicker(QPushButton):
         """
 
         self.__in_selection = True
-        self.setText(self.__selecting_text)
+        self.setText(self.__selection_text)
 
     def focusOutEvent(self, event):
         """Unset selection text if focused out without new key being selected
@@ -95,10 +95,10 @@ class HotkeyPicker(QPushButton):
             self.__selected_key_string = ''
         else:
             # Ignore key press if key is not in allowed_keys
-            if self.__filtering_keys and self.__allowed_keys and key not in self.__allowed_keys:
+            if self.__key_filter_enabled and self.__allowed_keys and key not in self.__allowed_keys:
                 return
             # Ignore key press if key is in forbidden_keys
-            elif self.__filtering_keys and self.__forbidden_keys and key in self.__forbidden_keys:
+            elif self.__key_filter_enabled and self.__forbidden_keys and key in self.__forbidden_keys:
                 return
 
             self.setText(key_string)
@@ -137,10 +137,10 @@ class HotkeyPicker(QPushButton):
         key_string = HotkeyPicker.keyCodeToString(hotkey)
 
         # Ignore if filter is enabled and key code is not in allowed keys
-        if self.__filtering_keys and self.__allowed_keys and hotkey not in self.__allowed_keys:
+        if self.__key_filter_enabled and self.__allowed_keys and hotkey not in self.__allowed_keys:
             return
         # Ignore if filter is enabled and key code is in forbidden keys
-        elif self.__filtering_keys and self.__forbidden_keys and hotkey in self.__forbidden_keys:
+        elif self.__key_filter_enabled and self.__forbidden_keys and hotkey in self.__forbidden_keys:
             return
 
         # Input key code valid
@@ -176,18 +176,18 @@ class HotkeyPicker(QPushButton):
         if not self.__in_selection and self.__selected_key_code == 0:
             self.setText(default_text)
 
-    def getSelectingText(self) -> str:
+    def getSelectionText(self) -> str:
         """Get the selecting text"""
 
-        return self.__selecting_text
+        return self.__selection_text
 
-    def setSelectingText(self, selecting_text: str):
+    def setSelectionText(self, selecting_text: str):
         """Set the selecting text
 
         :param selecting_text: the new selecting text
         """
 
-        self.__selecting_text = selecting_text
+        self.__selection_text = selecting_text
         if self.__in_selection:
             self.setText(selecting_text)
 
@@ -204,18 +204,18 @@ class HotkeyPicker(QPushButton):
 
         self.__cancel_key = cancel_key
 
-    def isFilteringKeys(self) -> bool:
+    def isKeyFilterEnabled(self) -> bool:
         """Get whether keys are being filtered"""
 
-        return self.__filtering_keys
+        return self.__key_filter_enabled
 
-    def filterKeys(self, on: bool):
+    def setKeyFilterEnabled(self, on: bool):
         """Enable or disable key filtering
 
         :param on: if keys should be filtered
         """
 
-        self.__filtering_keys = on
+        self.__key_filter_enabled = on
 
     def getAllowedKeys(self) -> list[Qt.Key]:
         """Get allowed keys"""
