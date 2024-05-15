@@ -14,6 +14,7 @@ class HotkeyPicker(QPushButton):
             __key_code_map[value] = key.partition('_')[2]
 
     # Manually change name for some keys
+    __key_code_map[Qt.Key.Key_Space] = 'Space'
     __key_code_map[Qt.Key.Key_Adiaeresis] = 'Ä'
     __key_code_map[Qt.Key.Key_Odiaeresis] = 'Ö'
     __key_code_map[Qt.Key.Key_Udiaeresis] = 'Ü'
