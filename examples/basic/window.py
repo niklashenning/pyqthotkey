@@ -1,6 +1,6 @@
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QMainWindow, QFormLayout, QWidget
-from src.pyqthotkey import HotkeyPicker
+from pyqthotkey import HotkeyPicker
 
 
 class Window(QMainWindow):

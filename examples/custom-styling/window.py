@@ -2,7 +2,7 @@ import sys
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QCursor
 from PyQt6.QtWidgets import QMainWindow, QLabel, QWidget, QPushButton
-from src.pyqthotkey import HotkeyPicker
+from pyqthotkey import HotkeyPicker
 
 
 class Window(QMainWindow):
