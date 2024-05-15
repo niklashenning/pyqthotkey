@@ -58,15 +58,15 @@ hotkey_picker.setHotkey(Qt.Key.Key_A)  # Could also directly pass int (e.g. 65)
 ```
 
 Reset the hotkey picker to the default state with no selected hotkey by using the `reset()` method:
-````python
+```python
 hotkey_picker.reset()
-````
+```
 
 You can also use the static `getKeyName()` method to get the name of a key:
 
 ```python
 key_name_a = HotkeyPicker.getKeyName(Qt.Key.Key_A)  # 'A'
-key_name_f5 = HotkeyPicker.getKeyName(16777268)  # 'F5'
+key_name_f5 = HotkeyPicker.getKeyName(16777268)     # 'F5'
 ```
 
 More in-depth examples can be found in the [examples](https://github.com/niklashenning/pyqthotkey/blob/master/examples) folder.
@@ -85,7 +85,7 @@ More in-depth examples can be found in the [examples](https://github.com/niklash
   hotkey_picker = HotkeyPicker(self, cancel_key=Qt.Key.Key_Return)
   
   # Or using the setter
-  hotkey_picker.setCancelKey(Qt.Key.Key_Return)  # Default value: Qt.Key.Key_Escape
+  hotkey_picker.setCancelKey(Qt.Key.Key_Return)  # Default: Qt.Key.Key_Escape
   ```
   
 * **Changing the default text of the hotkey picker:**
@@ -95,7 +95,7 @@ More in-depth examples can be found in the [examples](https://github.com/niklash
    hotkey_picker = HotkeyPicker(self, default_text='Not selected..')
   
    # Or using the setter
-   hotkey_picker.setDefaultText('Not selected..')  # Default value: 'None'
+   hotkey_picker.setDefaultText('Not selected..')  # Default: 'None'
    ```
 
 * **Changing the text of the hotkey picker that is shown when waiting for a key press:**
@@ -105,7 +105,7 @@ More in-depth examples can be found in the [examples](https://github.com/niklash
    hotkey_picker = HotkeyPicker(self, selection_text='Selecting..')
   
    # Or using the setter
-   hotkey_picker.setSelectionText('Selecting..')  # Default value: '..'
+   hotkey_picker.setSelectionText('Selecting..')  # Default: '..'
    ```
 
 * **Only allowing specific keys to be selected:**
