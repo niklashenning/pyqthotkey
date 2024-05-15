@@ -30,6 +30,8 @@ def test_set_hotkey(qtbot):
     # Test setting hotkey without filter
     hotkey_picker.setHotkey(Qt.Key.Key_F8)
     assert hotkey_picker.getHotkey() == Qt.Key.Key_F8
+    hotkey_picker.setHotkey(-1)
+    assert hotkey_picker.getHotkey() == Qt.Key.Key_F8
 
     # Test setting hotkey with custom whitelisted keys
     hotkey_picker.setKeyFilterEnabled(True)
@@ -183,12 +185,23 @@ def test_focus_out_with_selected_key(qtbot):
     assert hotkey_picker.text() == 'F3'
 
 
-def test_key_code_to_string(qtbot):
-    """Test the static keyCodeToString method"""
+def test_key_to_string(qtbot):
+    """Test the static keyToString() method"""
 
-    assert HotkeyPicker.keyCodeToString(Qt.Key.Key_A) == 'A'
-    assert HotkeyPicker.keyCodeToString(65) == 'A'
-    assert HotkeyPicker.keyCodeToString(Qt.Key.Key_Escape) == 'Escape'
-    assert HotkeyPicker.keyCodeToString(Qt.Key.Key_Control) == 'Control'
-    assert HotkeyPicker.keyCodeToString(Qt.Key.Key_F12) == 'F12'
-    assert HotkeyPicker.keyCodeToString(0) is None
+    assert HotkeyPicker.keyToString(Qt.Key.Key_A) == 'A'
+    assert HotkeyPicker.keyToString(65) == 'A'
+    assert HotkeyPicker.keyToString(Qt.Key.Key_Escape) == 'Escape'
+    assert HotkeyPicker.keyToString(Qt.Key.Key_Control) == 'Control'
+    assert HotkeyPicker.keyToString(Qt.Key.Key_F12) == 'F12'
+    assert HotkeyPicker.keyToString(-1) is None
+
+
+def test_set_key_name(qtbot):
+    """Test the static setKeyName() method"""
+
+    HotkeyPicker.setKeyName(Qt.Key.Key_Control, 'Ctrl custom name')
+    hotkey_picker = HotkeyPicker()
+    qtbot.addWidget(hotkey_picker)
+
+    QTest.keyEvent(QTest.KeyAction.Click, hotkey_picker, Qt.Key.Key_Control)
+    assert hotkey_picker.getHotkeyString() == 'Ctrl custom name'
