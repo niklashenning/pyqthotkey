@@ -204,12 +204,12 @@ def test_focus_out_with_selected_key(qtbot):
 def test_key_to_string(qtbot):
     """Test the static keyToString() method"""
 
-    assert HotkeyPicker.keyToString(Qt.Key.Key_A) == 'A'
-    assert HotkeyPicker.keyToString(65) == 'A'
-    assert HotkeyPicker.keyToString(Qt.Key.Key_Escape) == 'Escape'
-    assert HotkeyPicker.keyToString(Qt.Key.Key_Control) == 'Control'
-    assert HotkeyPicker.keyToString(Qt.Key.Key_F12) == 'F12'
-    assert HotkeyPicker.keyToString(-1) is None
+    assert HotkeyPicker.getKeyName(Qt.Key.Key_A) == 'A'
+    assert HotkeyPicker.getKeyName(65) == 'A'
+    assert HotkeyPicker.getKeyName(Qt.Key.Key_Escape) == 'Escape'
+    assert HotkeyPicker.getKeyName(Qt.Key.Key_Control) == 'Control'
+    assert HotkeyPicker.getKeyName(Qt.Key.Key_F12) == 'F12'
+    assert HotkeyPicker.getKeyName(-1) is None
 
 
 def test_set_key_name(qtbot):
@@ -221,3 +221,4 @@ def test_set_key_name(qtbot):
 
     QTest.keyEvent(QTest.KeyAction.Click, hotkey_picker, Qt.Key.Key_Control)
     assert hotkey_picker.getHotkeyName() == 'Ctrl custom name'
+    assert HotkeyPicker.getKeyName(Qt.Key.Key_Control) == 'Ctrl custom name'

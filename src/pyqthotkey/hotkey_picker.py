@@ -75,7 +75,7 @@ class HotkeyPicker(QPushButton):
             self.setText(self.__default_text)
             self.__in_selection = False
         elif self.__selected_key is not None and self.__in_selection:
-            self.setText(HotkeyPicker.keyToString(self.__selected_key))
+            self.setText(HotkeyPicker.getKeyName(self.__selected_key))
             self.__in_selection = False
 
     def keyPressEvent(self, event):
@@ -98,7 +98,7 @@ class HotkeyPicker(QPushButton):
             elif self.__key_filter_enabled and self.__blacklisted_keys and key in self.__blacklisted_keys:
                 return
 
-            self.setText(HotkeyPicker.keyToString(key))
+            self.setText(HotkeyPicker.getKeyName(key))
             self.__selected_key = key
 
         # Clear selection and widget focus
@@ -122,7 +122,7 @@ class HotkeyPicker(QPushButton):
         :return: string with the key name, None if no hotkey is selected
         """
 
-        return HotkeyPicker.keyToString(self.__selected_key)
+        return HotkeyPicker.getKeyName(self.__selected_key)
 
     def isInSelection(self) -> bool:
         """Get whether the hotkey picker is in selection state
@@ -148,7 +148,7 @@ class HotkeyPicker(QPushButton):
             return
 
         # Set hotkey if input key valid
-        key_string = HotkeyPicker.keyToString(hotkey)
+        key_string = HotkeyPicker.getKeyName(hotkey)
 
         if key_string is not None:
             self.__selected_key = int(hotkey)
@@ -264,10 +264,10 @@ class HotkeyPicker(QPushButton):
         """Emit a signal that the selected hotkey has changed"""
 
         self.hotkeyChanged.emit(self.__selected_key,
-                                HotkeyPicker.keyToString(self.__selected_key))
+                                HotkeyPicker.getKeyName(self.__selected_key))
 
     @staticmethod
-    def keyToString(key: Qt.Key | int) -> str:
+    def getKeyName(key: Qt.Key | int) -> str:
         """Get the key name from a key
 
         :param key: key you want to get the name of (e.g. 65 or Qt.Key_A)
