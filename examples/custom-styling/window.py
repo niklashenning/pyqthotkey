@@ -1,8 +1,8 @@
 import sys
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QCursor
-from PyQt5.QtWidgets import QMainWindow, QLabel, QWidget, QPushButton
-from src.hotkey_picker import HotkeyPicker
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QCursor
+from PyQt6.QtWidgets import QMainWindow, QLabel, QWidget, QPushButton
+from pyqthotkey import HotkeyPicker
 
 
 class Window(QMainWindow):
@@ -22,8 +22,8 @@ class Window(QMainWindow):
         self.offset = None
 
         # Frameless transparent window
-        self.setWindowFlag(Qt.FramelessWindowHint)
-        self.setAttribute(Qt.WA_TranslucentBackground)
+        self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
+        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self.setFixedSize(360, 190)
 
         # Widget as window so everything can be customized
@@ -47,9 +47,9 @@ class Window(QMainWindow):
         # Close button
         self.close_button = QPushButton(self)
         self.close_button.setText('✕')
-        self.close_button.setFixedSize(23, 23)
+        self.close_button.setFixedSize(22, 22)
         self.close_button.move(331, 5)
-        self.close_button.setCursor(QCursor(Qt.PointingHandCursor))
+        self.close_button.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.close_button.setObjectName('close_button')
         self.close_button.clicked.connect(self.close_button_pressed)
 
@@ -70,19 +70,22 @@ class Window(QMainWindow):
         self.label_3.setObjectName('label_3')
 
         # F1-F12 keys
-        f_keys = [Qt.Key_F1, Qt.Key_F2, Qt.Key_F3, Qt.Key_F4, Qt.Key_F5, Qt.Key_F6,
-                  Qt.Key_F7, Qt.Key_F8, Qt.Key_F9, Qt.Key_F10, Qt.Key_F11, Qt.Key_F12]
+        f_keys = [Qt.Key.Key_F1, Qt.Key.Key_F2, Qt.Key.Key_F3, Qt.Key.Key_F4,
+                  Qt.Key.Key_F5, Qt.Key.Key_F6, Qt.Key.Key_F7, Qt.Key.Key_F8,
+                  Qt.Key.Key_F9, Qt.Key.Key_F10, Qt.Key.Key_F11, Qt.Key.Key_F12]
 
         # First hotkey picker (custom text when in selection and custom cancel key)
-        self.hotkey_picker_1 = HotkeyPicker(self, selecting_text='Selecting..', cancel_key=Qt.Key_Return)
+        self.hotkey_picker_1 = HotkeyPicker(self, selection_text='Selecting..',
+                                            cancel_key=Qt.Key.Key_Return)
         self.hotkey_picker_1.setFixedWidth(140)
         self.hotkey_picker_1.move(150, 55)
         self.hotkey_picker_1.setObjectName('hotkey_picker_1')
         self.hotkey_picker_1.hotkeyChanged.connect(self.hotkey_picker_1_changed)
-        self.hotkey_picker_1.setHotkey(Qt.Key_F5)
+        self.hotkey_picker_1.setHotkey(Qt.Key.Key_F5)
 
         # Second hotkey picker (only F1-F12 can be picked)
-        self.hotkey_picker_2 = HotkeyPicker(self, filter_keys=True, forbidden_keys=f_keys)
+        self.hotkey_picker_2 = HotkeyPicker(self, key_filter_enabled=True,
+                                            whitelisted_keys=f_keys)
         self.hotkey_picker_2.setFixedWidth(140)
         self.hotkey_picker_2.move(150, 95)
         self.hotkey_picker_2.setObjectName('hotkey_picker_2')
@@ -90,7 +93,7 @@ class Window(QMainWindow):
 
         # Third hotkey picker (everything except for F1-F12 keys can be picked)
         self.hotkey_picker_3 = HotkeyPicker(self, default_text='Not selected..',
-                                            filter_keys=True, allowed_keys=f_keys)
+                                            key_filter_enabled=True, blacklisted_keys=f_keys)
         self.hotkey_picker_3.setFixedWidth(140)
         self.hotkey_picker_3.move(150, 135)
         self.hotkey_picker_3.setObjectName('hotkey_picker_3')
@@ -129,14 +132,14 @@ class Window(QMainWindow):
 
     def mousePressEvent(self, event):
         # Window drag functionality
-        if event.button() == Qt.LeftButton and self.window_bar.geometry().contains(event.pos()):
+        if event.button() == Qt.MouseButton.LeftButton and self.window_bar.geometry().contains(event.pos()):
             self.offset = event.pos()
         else:
             super().mousePressEvent(event)
 
     def mouseMoveEvent(self, event):
         # Window drag functionality
-        if self.offset is not None and event.buttons() == Qt.LeftButton:
+        if self.offset is not None and event.buttons() == Qt.MouseButton.LeftButton:
             self.move(self.pos() + event.pos() - self.offset)
         else:
             super().mouseMoveEvent(event)
