@@ -116,13 +116,21 @@ class HotkeyPicker(QPushButton):
 
         return self.__selected_key
 
-    def getHotkeyString(self) -> str:
+    def getHotkeyName(self) -> str:
         """Get the name of the currently selected hotkey
 
         :return: string with the key name, None if no hotkey is selected
         """
 
         return HotkeyPicker.keyToString(self.__selected_key)
+
+    def isInSelection(self) -> bool:
+        """Get whether the hotkey picker is in selection state
+
+        :return: whether the hotkey picker is in selection
+        """
+
+        return self.__in_selection
 
     def setHotkey(self, hotkey: Qt.Key | int):
         """Set the hotkey

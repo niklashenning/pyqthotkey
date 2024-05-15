@@ -12,13 +12,29 @@ def test_initial_values(qtbot):
     qtbot.addWidget(hotkey_picker)
 
     assert hotkey_picker.getHotkey() is None
-    assert hotkey_picker.getHotkeyString() is None
+    assert hotkey_picker.getHotkeyName() is None
     assert hotkey_picker.getDefaultText() == 'None'
     assert hotkey_picker.getSelectionText() == '..'
     assert hotkey_picker.getCancelKey() == Qt.Key.Key_Escape
     assert hotkey_picker.isKeyFilterEnabled() == False
     assert hotkey_picker.getWhitelistedKeys() == []
     assert hotkey_picker.getBlacklistedKeys() == []
+
+
+def test_is_in_selection(qtbot):
+    """Test checking whether the hotkey picker is in selection mode"""
+
+    hotkey_picker = HotkeyPicker()
+    qtbot.addWidget(hotkey_picker)
+
+    assert hotkey_picker.isInSelection() == False
+    qt_api.QtWidgets.QApplication.sendEvent(hotkey_picker, QFocusEvent(QEvent.Type.FocusIn))
+    assert hotkey_picker.isInSelection() == True
+    qt_api.QtWidgets.QApplication.sendEvent(hotkey_picker, QFocusEvent(QEvent.Type.FocusOut))
+    assert hotkey_picker.isInSelection() == False
+    qt_api.QtWidgets.QApplication.sendEvent(hotkey_picker, QFocusEvent(QEvent.Type.FocusIn))
+    QTest.keyEvent(QTest.KeyAction.Click, hotkey_picker, Qt.Key.Key_Control)
+    assert hotkey_picker.isInSelection() == False
 
 
 def test_set_hotkey(qtbot):
@@ -204,4 +220,4 @@ def test_set_key_name(qtbot):
     qtbot.addWidget(hotkey_picker)
 
     QTest.keyEvent(QTest.KeyAction.Click, hotkey_picker, Qt.Key.Key_Control)
-    assert hotkey_picker.getHotkeyString() == 'Ctrl custom name'
+    assert hotkey_picker.getHotkeyName() == 'Ctrl custom name'
